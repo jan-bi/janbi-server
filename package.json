@@ -1,0 +1,31 @@
+{
+  "name": "what-just-changed-server",
+  "version": "0.0.0",
+  "engines": {
+    "node": "22.11.0"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node ./bin/www",
+    "lint": "eslint .",
+    "format": "prettier --cache --write ."
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.24.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.6",
+    "prettier": "^3.3.3",
+    "nodemon": "^3.1.9"
+  }
+}
