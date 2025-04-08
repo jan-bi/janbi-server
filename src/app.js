@@ -1,10 +1,12 @@
-const createError = require("http-errors");
-const express = require("express");
-const path = require("path");
-const cookieParser = require("cookie-parser");
-const logger = require("morgan");
+import "dotenv/config.js";
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import logger from "morgan";
+import createError from "http-errors";
+import connectDatabase from "./config/database.js";
 
-const indexRouter = require("./routes/index");
+connectDatabase();
 const app = express();
 
 app.use(logger("dev"));
@@ -27,4 +29,4 @@ app.use((err, req, res) => {
   res.render("error");
 });
 
-module.exports = app;
+export default app;
