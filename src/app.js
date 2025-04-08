@@ -4,6 +4,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import createError from "http-errors";
+import connectDatabase from "./config/database.js";
+
+connectDatabase();
 const app = express();
 
 app.use(logger("dev"));
