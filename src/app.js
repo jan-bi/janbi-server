@@ -12,6 +12,7 @@ connectDatabase();
 
 import indexRouter from "./routes/index.js";
 import urlRouter from "./routes/urls.js";
+import scrapeRouter from "./routes/scrape.js";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/", indexRouter);
 app.use("/urls", urlRouter);
+app.use("/scrape", scrapeRouter);
 
 app.use((req, res, next) => {
   next(createError(httpStatusCode.NOT_FOUND));
