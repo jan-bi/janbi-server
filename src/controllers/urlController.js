@@ -1,9 +1,10 @@
-import httpStatusCode from "../utils/httpStatusCode";
+import httpStatusCode from "../utils/httpStatusCode.js";
 import UrlModel from "../models/Url.js";
 
 const isValidUrl = (value) => {
   try {
     new URL(value);
+
     return true;
   } catch {
     return false;
