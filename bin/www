@@ -4,7 +4,7 @@ import http from "http";
 import debugLib from "debug";
 import app from "../src/app.js";
 
-const debug = debugLib("what-just-changed-server:server");
+const debug = debugLib("janbi-server:server");
 
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
