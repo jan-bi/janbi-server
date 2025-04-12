@@ -10,9 +10,14 @@ const urlSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    checkInterval: {
-      type: Number,
-      default: 3600,
+    dayOfWeek: {
+      type: String,
+      enum: ["월", "화", "수", "목", "금", "토", "일"],
+      required: true,
+    },
+    scheduleTime: {
+      type: String,
+      required: true,
     },
     lastChecked: {
       type: Date,
