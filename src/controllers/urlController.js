@@ -11,14 +11,20 @@ const isValidUrl = (value) => {
   }
 };
 
+const isValidTimeFormat = (time) => {
+  return /^\d{2}:\d{2}$/.test(time);
+};
+
+const VALID_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+
 export const addUrl = async (req, res) => {
   try {
-    const { url, name, checkInterval } = req.body;
+    const { url, name, dayOfWeek, scheduleTime } = req.body;
 
     const trimmedUrl = url?.trim();
     const trimmedName = name?.trim();
 
-    if (!trimmedUrl || !trimmedName || !checkInterval) {
+    if (!trimmedUrl || !trimmedName || !dayOfWeek || !scheduleTime) {
       return res
         .status(httpStatusCode.BAD_REQUEST)
         .json({ message: "필수 값이 누락되었거나 공백이 있습니다." });
@@ -30,10 +36,23 @@ export const addUrl = async (req, res) => {
         .json({ message: "유효하지 않은 URL 형식입니다." });
     }
 
+    if (!VALID_DAYS.includes(dayOfWeek)) {
+      return res
+        .status(httpStatusCode.BAD_REQUEST)
+        .json({ message: "유효하지 않은 요일 값입니다." });
+    }
+
+    if (!isValidTimeFormat(scheduleTime)) {
+      return res
+        .status(httpStatusCode.BAD_REQUEST)
+        .json({ message: "유효하지 않은 시간 형식입니다." });
+    }
+
     const newUrl = await UrlModel.create({
       url: trimmedUrl,
       name: trimmedName,
-      checkInterval,
+      dayOfWeek,
+      scheduleTime,
     });
 
     res
