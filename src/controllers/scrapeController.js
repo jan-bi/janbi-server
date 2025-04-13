@@ -1,15 +1,15 @@
 import "dotenv/config.js";
 import httpStatusCode from "../utils/httpStatusCode.js";
-import { scrapeStaticPage } from "../services/staticScraper.js";
+import scrapePage from "../services/pageScraper.js";
 
-export const getStaticHtml = async (req, res) => {
+export const getPageHtml = async (req, res) => {
   const { url } = req.body;
 
   if (!url) {
     return res.status(httpStatusCode.BAD_REQUEST).json({ message: "분석할 URL이 없습니다." });
   }
 
-  const scrapeResult = await scrapeStaticPage(url);
+  const scrapeResult = await scrapePage(url);
 
   if (scrapeResult.success) {
     return res.status(httpStatusCode.OK).json(scrapeResult);
