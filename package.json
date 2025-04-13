@@ -1,5 +1,5 @@
 {
-  "name": "what-just-changed-server",
+  "name": "janbi-server",
   "version": "0.0.0",
   "engines": {
     "node": "22.11.0"
