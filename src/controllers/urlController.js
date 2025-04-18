@@ -19,7 +19,7 @@ const VALID_DAYS = ["일", "월", "화", "수", "목", "금", "토"];
 
 export const addUrl = async (req, res) => {
   try {
-    const { url, name, dayOfWeek, scheduleTime } = req.body;
+    const { url, name, dayOfWeek, scheduleTime, selectors } = req.body;
 
     const trimmedUrl = url?.trim();
     const trimmedName = name?.trim();
@@ -48,11 +48,16 @@ export const addUrl = async (req, res) => {
         .json({ message: "유효하지 않은 시간 형식입니다." });
     }
 
+    if (!Array.isArray(selectors) || selectors.length === 0) {
+      return res.status(httpStatusCode.BAD_REQUEST).json({ message: "선택된 요소가 없습니다." });
+    }
+
     const newUrl = await UrlModel.create({
       url: trimmedUrl,
       name: trimmedName,
       dayOfWeek,
       scheduleTime,
+      selectors,
     });
 
     res
