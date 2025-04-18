@@ -23,6 +23,14 @@ const urlSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    selectors: {
+      type: [String],
+      default: [],
+    },
+    previousHtml: {
+      type: String,
+      default: "",
+    }
   },
   { timestamps: true }
 );
