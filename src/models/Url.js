@@ -23,10 +23,19 @@ const urlSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
-    selectors: {
-      type: [String],
-      default: [],
-    },
+    selectors: [
+      {
+        type: {
+          type: String,
+          enum: ["css", "xpath"],
+          required: true,
+        },
+        selector: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     previousHtml: {
       type: String,
       default: "",

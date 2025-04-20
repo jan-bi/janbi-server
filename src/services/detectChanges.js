@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import scrapePage from "./pageScraper";
+import scrapePage from "./pageScraper.js";
 
 export default async function detectChanges(savedUrl) {
   const { url, previousHtml, selectors } = savedUrl;
