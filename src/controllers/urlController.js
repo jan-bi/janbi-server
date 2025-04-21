@@ -1,5 +1,6 @@
 import httpStatusCode from "../utils/httpStatusCode.js";
 import UrlModel from "../models/Url.js";
+import { createSchedule } from "../scheduler/scheduler.js";
 
 const isValidUrl = (value) => {
   try {
@@ -59,6 +60,8 @@ export const addUrl = async (req, res) => {
       scheduleTime,
       selectors,
     });
+
+    createSchedule(newUrl);
 
     res
       .status(httpStatusCode.CREATED)
