@@ -18,6 +18,13 @@ const changeLogSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  changedContents: [
+    {
+      selector: { type: String, required: true },
+      before: { type: String, default: "" },
+      after: { type: String, default: "" },
+    },
+  ],
   alreadyNotified: {
     type: Boolean,
     default: false
