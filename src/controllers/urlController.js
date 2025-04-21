@@ -1,6 +1,7 @@
 import httpStatusCode from "../utils/httpStatusCode.js";
 import UrlModel from "../models/Url.js";
 import { createSchedule } from "../scheduler/scheduler.js";
+import scrapePage from "../services/pageScraper.js";
 
 const isValidUrl = (value) => {
   try {
@@ -53,12 +54,16 @@ export const addUrl = async (req, res) => {
       return res.status(httpStatusCode.BAD_REQUEST).json({ message: "선택된 요소가 없습니다." });
     }
 
+    const scrapeResult = await scrapePage(trimmedUrl);
+    const initialHtml = scrapeResult.success ?  scrapeResult.data.fullHtml : "";
+
     const newUrl = await UrlModel.create({
       url: trimmedUrl,
       name: trimmedName,
       dayOfWeek,
       scheduleTime,
       selectors,
+      previousHtml: initialHtml,
     });
 
     createSchedule(newUrl);
