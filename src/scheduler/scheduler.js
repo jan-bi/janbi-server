@@ -45,6 +45,7 @@ export function createSchedule(urlInfo) {
         scheduledTime: new Date(),
         isChanged: changeResult.isChanged,
         changedSelectors: changeResult.changedSelectors,
+        changedContents: changeResult.changedContents,
         alreadyNotified: false,
       });
 
