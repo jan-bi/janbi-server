@@ -2,6 +2,7 @@ import httpStatusCode from "../utils/httpStatusCode.js";
 import UrlModel from "../models/Url.js";
 import { createSchedule } from "../scheduler/scheduler.js";
 import scrapePage from "../services/pageScraper.js";
+import ChangeLog from "../models/ChangeLog.js";
 
 const isValidUrl = (value) => {
   try {
@@ -68,11 +69,24 @@ export const addUrl = async (req, res) => {
 
     createSchedule(newUrl);
 
-    res
+    return res
       .status(httpStatusCode.CREATED)
       .json({ message: "URL이 성공적으로 등록되었습니다.", data: newUrl });
   } catch (error) {
     console.error("URL 추가에 실패했습니다.", error);
-    res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "서버 오류가 발생했습니다." });
+    return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "서버 오류가 발생했습니다." });
+  }
+};
+
+export const getUrlHistory = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const urlHistoryLogs = await ChangeLog.find({ urlId: id }).sort({ scheduleTime: -1 });
+
+    return res.status(httpStatusCode.OK).json({ urlHistoryLogs });
+  } catch (err) {
+    console.error("변경 이력 조회에 실패했습니다.", err);
+    return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "서버 오류가 발생했습니다." });
   }
 };
