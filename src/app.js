@@ -7,8 +7,10 @@ import createError from "http-errors";
 
 import httpStatusCode from "./utils/httpStatusCode.js";
 import connectDatabase from "./config/database.js";
+import { initializeSchedule } from "./scheduler/scheduler.js";
 
 connectDatabase();
+initializeSchedule();
 
 import indexRouter from "./routes/index.js";
 import urlRouter from "./routes/urls.js";

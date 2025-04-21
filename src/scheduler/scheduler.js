@@ -1,4 +1,5 @@
 import cron from "node-cron";
+import Url from "../models/Url.js";
 import detectChanges from "../services/changeDetector.js";
 import ChangeLog from "../models/ChangeLog.js";
 
@@ -53,4 +54,15 @@ export function createSchedule(urlInfo) {
 
   urlCronJobMap.set(key, cronJob);
   console.log(`스케줄 등록 완료 ${urlInfo.name} (${dayOfWeek} ${scheduleTime})`);
+}
+
+export async function initializeSchedule() {
+  try {
+    const urlList = await Url.find({});
+
+    urlList.forEach(createSchedule);
+    console.log(`전체 URL에 대한 스케줄 등록 완료 (총 ${urlList.length}개)`);
+  } catch (err) {
+    console.error("서버 시작 전 스케줄 등록 실패", err);
+  }
 }
