@@ -16,9 +16,15 @@ const DAY = {
 const urlCronJobMap = new Map();
 
 export function createSchedule(urlInfo) {
-  const key = urlInfo._id.toString();
+  const urlId = urlInfo._id.toString();
 
-  if (urlCronJobMap.has(key)) {
+  if (!urlInfo.scheduleTime || !urlInfo.dayOfWeek) {
+    console.log("설정된 스케줄이 없습니다.");
+
+    return;
+  }
+
+  if (urlCronJobMap.has(urlId)) {
     console.log(`이미 등록된 스케줄입니다. (${urlInfo.name})`);
 
     return;
@@ -52,7 +58,7 @@ export function createSchedule(urlInfo) {
     }
   });
 
-  urlCronJobMap.set(key, cronJob);
+  urlCronJobMap.set(urlId, cronJob);
   console.log(`스케줄 등록 완료 ${urlInfo.name} (${dayOfWeek} ${scheduleTime})`);
 }
 
