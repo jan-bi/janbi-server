@@ -39,7 +39,21 @@ const urlSchema = new mongoose.Schema(
     previousHtml: {
       type: String,
       default: "",
-    }
+    },
+    slack: {
+      token: {
+        type: String
+      },
+      channelId: {
+        type: String
+      },
+      channelName: {
+        type: String
+      },
+      webhookUrl: {
+        type: String
+      },
+    },
   },
   { timestamps: true }
 );
