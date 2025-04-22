@@ -2,6 +2,7 @@ import cron from "node-cron";
 import Url from "../models/Url.js";
 import detectChanges from "../services/changeDetector.js";
 import ChangeLog from "../models/ChangeLog.js";
+import sendSlackAlert from "../services/slackAlert.js";
 
 const DAY = {
   "일": 0,
@@ -50,9 +51,13 @@ export function createSchedule(urlInfo) {
       });
 
       if (changeResult.isChanged) {
-        console.log("변경 감지", changeResult.changedSelectors);
-      } else {
-        console.log("변경된 것이 없습니다.");
+        if (!urlInfo.slack.webhookUrl) return;
+
+        await sendSlackAlert({
+          webhookUrl: urlInfo.slack.webhookUrl,
+          name: urlInfo.name,
+          changes: changeResult.isChanged ? changeResult.changedContents : [],
+        });
       }
     } catch (err) {
       console.error("스케줄 등록에 실패하였습니다.", err);
