@@ -52,19 +52,36 @@ export const addUrl = async (req, res) => {
     }
 
     if (!Array.isArray(selectors) || selectors.length === 0) {
-      return res.status(httpStatusCode.BAD_REQUEST).json({ message: "선택된 요소가 없습니다." });
+      return res
+        .status(httpStatusCode.BAD_REQUEST)
+        .json({ message: "선택된 요소가 없습니다." });
     }
 
     const scrapeResult = await scrapePage(trimmedUrl);
-    const initialHtml = scrapeResult.success ?  scrapeResult.data.fullHtml : "";
+    const initialHtml = scrapeResult.success ? scrapeResult.data.fullHtml : "";
 
     const newUrl = await UrlModel.create({
       url: trimmedUrl,
       name: trimmedName,
       dayOfWeek,
       scheduleTime,
-      selectors,
+      selectors: selectors.map(({ type, selector }) => ({ type, selector })),
       previousHtml: initialHtml,
+    });
+
+    const initialSnapshots = selectors.map(({ type, selector, content }) => ({
+      selector: `${type}:${selector}`,
+      beforeHtml: "",
+      afterHtml: content || "<비어있음>",
+    }));
+
+    await ChangeLog.create({
+      urlId: newUrl._id,
+      scheduledTime: new Date(),
+      isChanged: false,
+      changedSelectors: [],
+      changedContents: initialSnapshots,
+      alreadyNotified: true,
     });
 
     createSchedule(newUrl);
@@ -74,7 +91,9 @@ export const addUrl = async (req, res) => {
       .json({ message: "URL이 성공적으로 등록되었습니다.", data: newUrl });
   } catch (error) {
     console.error("URL 추가에 실패했습니다.", error);
-    return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "서버 오류가 발생했습니다." });
+    return res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .json({ message: "서버 오류가 발생했습니다." });
   }
 };
 
@@ -84,7 +103,7 @@ export const getUrlHistory = async (req, res) => {
 
     const urlHistoryLogs = await ChangeLog.find({ urlId: id }).sort({ scheduleTime: -1 });
 
-    return res.status(httpStatusCode.OK).json({ urlHistoryLogs });
+    return res.status(httpStatusCode.OK).json({ url: await UrlModel.findById(id), urlHistoryLogs });
   } catch (err) {
     console.error("변경 이력 조회에 실패했습니다.", err);
     return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "서버 오류가 발생했습니다." });
