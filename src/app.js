@@ -12,7 +12,6 @@ import { initializeSchedule } from "./scheduler/scheduler.js";
 connectDatabase();
 initializeSchedule();
 
-import indexRouter from "./routes/index.js";
 import urlRouter from "./routes/urls.js";
 import scrapeRouter from "./routes/scrape.js";
 import slackAuthRouter from "./routes/auth/slackAuth.js";
@@ -25,7 +24,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/", indexRouter);
 app.use("/urls", urlRouter);
 app.use("/scrape", scrapeRouter);
 app.use("/auth", slackAuthRouter);
