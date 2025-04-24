@@ -90,3 +90,14 @@ export const getUrlHistory = async (req, res) => {
     return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "서버 오류가 발생했습니다." });
   }
 };
+
+export const getAllUrls = async (req, res) => {
+  try {
+    const urlList = await UrlModel.find({}).sort({ createdAt: -1 });
+
+    return res.status(httpStatusCode.OK).json({ urlList });
+  } catch (err) {
+    console.error("URL 목록 조회에 실패했습니다.", err);
+    return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "서버 오류가 발생했습니다." });
+  }
+};
