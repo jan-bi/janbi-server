@@ -4,15 +4,15 @@ import detectChanges from "../services/changeDetector.js";
 import ChangeLog from "../models/ChangeLog.js";
 import sendSlackAlert from "../services/slackAlert.js";
 
-const DAY = {
-  "일": 0,
-  "월": 1,
-  "화": 2,
-  "수": 3,
-  "목": 4,
-  "금": 5,
-  "토": 6,
-};
+// const DAY = {
+//   "일": 0,
+//   "월": 1,
+//   "화": 2,
+//   "수": 3,
+//   "목": 4,
+//   "금": 5,
+//   "토": 6,
+// };
 
 const urlCronJobMap = new Map();
 
@@ -32,14 +32,26 @@ export function createSchedule(urlInfo) {
   }
 
   const { dayOfWeek, scheduleTime } = urlInfo;
-  const [hour, minute] = scheduleTime.split(":");
-  const dayIndex = DAY[dayOfWeek];
+  // const [hour, minute] = scheduleTime.split(":");
+  // const dayIndex = DAY[dayOfWeek];
 
-  const cronExpression = `${minute} ${hour} * * ${dayIndex}`;
+  // 테스트용
+  const cronExpression = `*/10 * * * * *`;
 
   const cronJob = cron.schedule(cronExpression, async () => {
     try {
-      const changeResult = await detectChanges(urlInfo);
+      const latestLog = await ChangeLog.findOne({ urlId: urlInfo._id })
+        .sort({ scheduledTime: -1 })
+        .lean();
+
+      const previousValues = {};
+      const changedList = latestLog?.changedContents || [];
+
+      for (const item of changedList) {
+        previousValues[item.selector] = item.afterHtml;
+      }
+
+      const changeResult = await detectChanges(urlInfo, previousValues);
 
       await ChangeLog.create({
         urlId: urlInfo._id,
@@ -50,13 +62,11 @@ export function createSchedule(urlInfo) {
         alreadyNotified: false,
       });
 
-      if (changeResult.isChanged) {
-        if (!urlInfo.slack.webhookUrl) return;
-
+      if (urlInfo.slack?.webhookUrl) {
         await sendSlackAlert({
           webhookUrl: urlInfo.slack.webhookUrl,
           name: urlInfo.name,
-          changes: changeResult.isChanged ? changeResult.changedContents : [],
+          changes: changeResult.changedContents,
         });
       }
     } catch (err) {
