@@ -57,7 +57,7 @@ export const addUrl = async (req, res) => {
         .json({ message: "선택된 요소가 없습니다." });
     }
 
-    const scrapeResult = await scrapePage(trimmedUrl);
+    const scrapeResult = await scrapePage(trimmedUrl, selectors);
     const initialHtml = scrapeResult.success ? scrapeResult.data.fullHtml : "";
 
     const newUrl = await UrlModel.create({
