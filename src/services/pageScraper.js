@@ -1,23 +1,57 @@
-import puppeteer from "puppeteer"
+import { chromium } from "playwright";
 
-export default async function scrapePage(url) {
-  try {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
+export default async function scrapePage(url, selectors = []) {
+  const browser = await chromium.launch({
+    headless: true,
+  });
 
-    await page.goto(url, { waitUntil: "networkidle2" });
-    await page.waitForSelector("body", { timeout: 10000 });
+  const context = await browser.newContext({
+    userAgent:
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36",
+  });
 
-    const fullHtml = await page.content();
-    await browser.close();
+  const page = await context.newPage();
+  await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
 
-    return {
-      success: true,
-      data: { fullHtml },
-    };
-  } catch (err) {
-    console.error("페이지 스크래핑 실패", err.message);
+  const selectorValues = [];
 
-    return { success: false, error: "페이지 스크래핑 실패" };
+  for (const { type, selector } of selectors) {
+    let value = "";
+
+    try {
+      const locator = type === "xpath"
+        ? page.locator(`xpath=${selector}`).first()
+        : page.locator(selector).first();
+
+      await locator.waitFor({ state: "attached", timeout: 10000 });
+
+      const isVisible = await locator.isVisible();
+
+      if (isVisible) {
+        const tagName = await locator.evaluate(el => el.tagName.toUpperCase());
+
+        if (tagName === "IMG") {
+          value = await locator.getAttribute("src");
+        } else {
+          value = (await locator.textContent())?.trim() || "";
+        }
+      } else {
+        console.warn(`${type}:${selector} 찾는 것에 실패했습니다.`);
+      }
+    } catch (err) {
+      console.warn(`스크래핑에 실패했습니다. ${type}:${selector}`, err.message);
+    }
+
+    selectorValues.push({
+      selector: `${type}:${selector}`,
+      value,
+    });
   }
+
+  await browser.close();
+
+  return {
+    success: true,
+    data: selectorValues,
+  };
 }
