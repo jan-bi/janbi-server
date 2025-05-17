@@ -18,7 +18,10 @@ import slackAuthRouter from "./routes/auth/slackAuth.js";
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
+app.use(cors({
+origin: process.env.CLIENT_ORIGIN,
+  credentials: true,
+}));
 app.use(logger("dev"));
 app.use(cookieParser());
 app.use(express.json());
