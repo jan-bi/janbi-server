@@ -61,6 +61,7 @@ export const addUrl = async (req, res) => {
     const initialHtml = scrapeResult.success ? scrapeResult.data.fullHtml : "";
 
     const newUrl = await UrlModel.create({
+      userId: req.user._id,
       url: trimmedUrl,
       name: trimmedName,
       dayOfWeek,
@@ -101,6 +102,12 @@ export const getUrlHistory = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const url = await UrlModel.findById(id);
+
+    if (!url || !url.userId.equals(req.user._id)) {
+      return res.status(httpStatusCode.UNAUTHORIZED).json({ message: "접근 권한이 없습니다." });
+    }
+
     const urlHistoryLogs = await ChangeLog.find({ urlId: id }).sort({ scheduleTime: -1 });
 
     return res.status(httpStatusCode.OK).json({ url: await UrlModel.findById(id), urlHistoryLogs });
@@ -112,7 +119,7 @@ export const getUrlHistory = async (req, res) => {
 
 export const getAllUrls = async (req, res) => {
   try {
-    const urlList = await UrlModel.find({}).sort({ createdAt: -1 });
+    const urlList = await UrlModel.find({ userId: req.user._id }).sort({ createdAt: -1 });
 
     return res.status(httpStatusCode.OK).json({ urlList });
   } catch (err) {
