@@ -5,7 +5,7 @@ import { handleGoogleCallback } from "../../controllers/authController.js";
 
 const router = express.Router();
 
-router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
-router.get("/google/callback", passport.authenticate("google", { session: false }), handleGoogleCallback);
+router.get("/", passport.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/callback", passport.authenticate("google", { session: false }), handleGoogleCallback);
 
 export default router;
