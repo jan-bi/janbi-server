@@ -14,12 +14,12 @@ initializeSchedule();
 
 import urlRouter from "./routes/urls.js";
 import scrapeRouter from "./routes/scrape.js";
-import slackAuthRouter from "./routes/auth/slackAuth.js";
+import authRouter from "./routes/auth/index.js";
 
 const app = express();
 
 app.use(cors({
-origin: process.env.CLIENT_ORIGIN,
+  origin: process.env.CLIENT_ORIGIN,
   credentials: true,
 }));
 app.use(logger("dev"));
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/urls", urlRouter);
 app.use("/scrape", scrapeRouter);
-app.use("/auth", slackAuthRouter);
+app.use("/auth", authRouter);
 
 app.use((req, res, next) => {
   next(createError(httpStatusCode.NOT_FOUND));
