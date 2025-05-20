@@ -20,6 +20,7 @@ export default [
       "no-console": "off",
       "prefer-const": "warn",
       "no-magic-numbers": ["warn", { ignore: [0, 1] }],
+      "no-unused-vars": ["error", { "argsIgnorePattern": "^next$" }],
     },
   },
 ];
