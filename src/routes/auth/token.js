@@ -2,6 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import User from "../../models/User.js";
 import httpStatusCode from "../../utils/httpStatusCode.js";
+import { cookieOptions } from "../../utils/cookieOptions.js";
 
 const router = express.Router();
 
@@ -32,9 +33,7 @@ router.post("/refresh", async (req, res) => {
 
     res
       .cookie("accessToken", newAccessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "Lax",
+        ...cookieOptions,
         maxAge: 60 * 60 * 1000,
       })
       .status(httpStatusCode.OK)

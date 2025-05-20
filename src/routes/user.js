@@ -1,6 +1,7 @@
 import express from "express";
 import { authenticate } from "../middlewares/authMiddleware.js";
 import httpStatusCode from "../utils/httpStatusCode.js";
+import { cookieOptions } from "../utils/cookieOptions.js";
 
 const router = express.Router();
 
@@ -10,14 +11,10 @@ router.get("/profile", authenticate, (req, res) => {
 
 router.post("/logout", (req, res) => {
   res.clearCookie("accessToken", {
-    httpOnly: true,
-    sameSite: "None",
-    secure: true,
+    ...cookieOptions,
   });
   res.clearCookie("refreshToken", {
-    httpOnly: true,
-    sameSite: "None",
-    secure: true,
+    ...cookieOptions,
   });
   res.status(httpStatusCode.OK).json({ message: "로그아웃 완료" });
 });
