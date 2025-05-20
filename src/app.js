@@ -33,6 +33,10 @@ app.use("/scrape", scrapeRouter);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
+app.get("/", (req, res) => {
+  res.status(httpStatusCode.OK).json({ message: "JANBI server is running" });
+});
+
 app.use((req, res, next) => {
   next(createError(httpStatusCode.NOT_FOUND));
 });
