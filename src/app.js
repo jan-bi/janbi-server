@@ -4,6 +4,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import createError from "http-errors";
+import passport from "passport";
+import "./auth/passport.js";
 
 import httpStatusCode from "./utils/httpStatusCode.js";
 import connectDatabase from "./config/database.js";
@@ -18,6 +20,8 @@ import authRouter from "./routes/auth/index.js";
 import userRouter from "./routes/user.js";
 
 const app = express();
+
+app.use(passport.initialize());
 
 app.use(cors({
   origin: process.env.CLIENT_ORIGIN,
