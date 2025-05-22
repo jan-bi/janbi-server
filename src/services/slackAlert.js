@@ -27,7 +27,7 @@ export default async function sendSlackAlert({ webhookUrl, name, changes }) {
     }
   }
 
-  text += `\n\n🔗 *<http://localhost:5173 |JANBI 대시보드로 이동>*`;
+  text += `\n\n🔗 *<https://jan-bi.netlify.app/history |JANBI 대시보드로 이동>*`;
 
   try {
     await fetch(webhookUrl, {
