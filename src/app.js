@@ -23,10 +23,19 @@ const app = express();
 
 app.use(passport.initialize());
 
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",").map(origin => origin.trim()) || [];
+
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS 에러: 허용되지 않은 origin입니다."));
+    }
+  },
   credentials: true,
 }));
+
 app.use(logger("dev"));
 app.use(cookieParser());
 app.use(express.json());
