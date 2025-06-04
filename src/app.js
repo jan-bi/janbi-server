@@ -15,7 +15,6 @@ connectDatabase();
 initializeSchedule();
 
 import urlRouter from "./routes/urls.js";
-import scrapeRouter from "./routes/scrape.js";
 import authRouter from "./routes/auth/index.js";
 import userRouter from "./routes/user.js";
 
@@ -42,7 +41,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/urls", urlRouter);
-app.use("/scrape", scrapeRouter);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
