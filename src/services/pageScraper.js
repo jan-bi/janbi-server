@@ -25,9 +25,7 @@ export default async function scrapePage(url, selectors = []) {
 
       await locator.waitFor({ state: "attached", timeout: 10000 });
 
-      const isVisible = await locator.isVisible();
-
-      if (isVisible) {
+      if (await locator.isVisible()) {
         const tagName = await locator.evaluate(el => el.tagName.toUpperCase());
 
         if (tagName === "IMG") {
