@@ -23,6 +23,8 @@ export const scrapeUrlById = async (req, res) => {
 
     if (scrapeResult.success) {
       savedUrl.previousHtml = scrapeResult.data.fullHtml;
+      savedUrl.lastChecked = new Date();
+
       await savedUrl.save();
 
       await ChangeLog.create({
