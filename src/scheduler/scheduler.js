@@ -61,6 +61,8 @@ export function createSchedule(urlInfo) {
         alreadyNotified: false,
       });
 
+      await Url.findByIdAndUpdate(urlInfo._id, { lastChecked: new Date() });
+
       if (urlInfo.slack?.webhookUrl) {
         await sendSlackAlert({
           webhookUrl: urlInfo.slack.webhookUrl,
