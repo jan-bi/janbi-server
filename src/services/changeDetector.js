@@ -15,10 +15,10 @@ export default async function detectChanges(savedUrl, previousValues = {}) {
   const changedSelectors = [];
   const changedContents = [];
 
-  for (const { selector, value: after } of scrapeResult.data) {
+  for (const { selector, value: after, tag } of scrapeResult.data) {
     const before = previousValues[selector] || "";
 
-    changedContents.push({ selector, beforeHtml: before, afterHtml: after });
+    changedContents.push({ selector, beforeHtml: before, afterHtml: after, tag });
 
     if (before !== after) {
       changedSelectors.push(selector);
