@@ -17,6 +17,7 @@ export default async function scrapePage(url, selectors = []) {
 
   for (const { type, selector } of selectors) {
     let value = "";
+    let tagName = "";
 
     try {
       const locator = type === "xpath"
@@ -26,7 +27,7 @@ export default async function scrapePage(url, selectors = []) {
       await locator.waitFor({ state: "attached", timeout: 10000 });
 
       if (await locator.isVisible()) {
-        const tagName = await locator.evaluate(el => el.tagName.toUpperCase());
+        tagName = await locator.evaluate(el => el.tagName.toUpperCase());
 
         if (tagName === "IMG") {
           value = await locator.getAttribute("src");
@@ -43,6 +44,7 @@ export default async function scrapePage(url, selectors = []) {
     selectorValues.push({
       selector: `${type}:${selector}`,
       value,
+      tag: tagName || undefined,
     });
   }
 
