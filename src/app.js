@@ -9,10 +9,8 @@ import "./auth/passport.js";
 
 import httpStatusCode from "./utils/httpStatusCode.js";
 import connectDatabase from "./config/database.js";
-import { initializeSchedule } from "./scheduler/scheduler.js";
 
 connectDatabase();
-initializeSchedule();
 
 import urlRouter from "./routes/urls.js";
 import authRouter from "./routes/auth/index.js";
