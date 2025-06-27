@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "start": "node ./bin/www",
-    "postinstall": "npx playwright install",
+    "dev": "nodemon ./bin/www",
     "lint": "eslint .",
     "format": "prettier --cache --write ."
   },
@@ -18,22 +18,17 @@
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "http-errors": "~1.6.3",
-    "jsdom": "^26.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
     "morgan": "~1.9.1",
-    "node-cron": "^3.0.3",
     "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0",
-    "playwright": "^1.52.0"
+    "passport-google-oauth20": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^9.24.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.2.6",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.6",
     "nodemon": "^3.1.9",
     "prettier": "^3.3.3"
