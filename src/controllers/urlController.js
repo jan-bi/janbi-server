@@ -1,6 +1,5 @@
 import httpStatusCode from "../utils/httpStatusCode.js";
 import UrlModel from "../models/Url.js";
-import { createSchedule } from "../scheduler/scheduler.js";
 import ChangeLog from "../models/ChangeLog.js";
 
 const isValidUrl = (value) => {
@@ -79,8 +78,6 @@ export const addUrl = async (req, res) => {
       changedContents: initialSnapshots,
       alreadyNotified: true,
     });
-
-    createSchedule(newUrl);
 
     return res
       .status(httpStatusCode.CREATED)
