@@ -22,7 +22,6 @@ export const scrapeUrlById = async (req, res) => {
     const scrapeResult = await scrapePage(savedUrl.url, savedUrl.selectors);
 
     if (scrapeResult.success) {
-      savedUrl.previousHtml = scrapeResult.data.fullHtml;
       savedUrl.lastChecked = new Date();
 
       await savedUrl.save();

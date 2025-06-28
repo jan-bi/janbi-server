@@ -1,7 +1,6 @@
 import httpStatusCode from "../utils/httpStatusCode.js";
 import UrlModel from "../models/Url.js";
 import { createSchedule } from "../scheduler/scheduler.js";
-import scrapePage from "../services/pageScraper.js";
 import ChangeLog from "../models/ChangeLog.js";
 
 const isValidUrl = (value) => {
@@ -57,9 +56,6 @@ export const addUrl = async (req, res) => {
         .json({ message: "선택된 요소가 없습니다." });
     }
 
-    const scrapeResult = await scrapePage(trimmedUrl, selectors);
-    const initialHtml = scrapeResult.success ? scrapeResult.data.fullHtml : "";
-
     const newUrl = await UrlModel.create({
       userId: req.user._id,
       url: trimmedUrl,
@@ -67,7 +63,6 @@ export const addUrl = async (req, res) => {
       dayOfWeek,
       scheduleTime,
       selectors: selectors.map(({ type, selector }) => ({ type, selector })),
-      previousHtml: initialHtml,
     });
 
     const initialSnapshots = selectors.map(({ type, selector, content }) => ({

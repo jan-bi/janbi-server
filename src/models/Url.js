@@ -41,10 +41,6 @@ const urlSchema = new mongoose.Schema(
         },
       },
     ],
-    previousHtml: {
-      type: String,
-      default: "",
-    },
     slack: {
       token: {
         type: String
