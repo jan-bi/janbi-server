@@ -119,3 +119,39 @@ export const getAllUrls = async (req, res) => {
     return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({ message: "서버 오류가 발생했습니다." });
   }
 };
+
+export const getUrlHistoryLogs = async (req, res) => {
+  const { id: urlId } = req.params;
+  const { cursor, limit = 10 } = req.query;
+
+  const query = { urlId };
+
+  if (cursor) {
+    query._id = { $lt: cursor };
+  }
+
+  try {
+    const url = await UrlModel.findById(urlId);
+
+    if (!url || !url.userId.equals(req.user._id)) {
+      return res
+        .status(httpStatusCode.UNAUTHORIZED)
+        .json({ message: "접근 권한이 없습니다." });
+    }
+
+    const logs = await ChangeLog.find(query)
+      .sort({ _id: -1 })
+      .limit(Number(limit));
+
+    const nextCursor = logs.length > 0 ? logs[logs.length - 1]._id : null;
+
+    return res
+      .status(httpStatusCode.OK)
+      .json({ urlHistoryLogs: logs, nextCursor });
+  } catch (err) {
+    console.error("히스토리 불러오기에 실패했습니다.", err);
+    return res
+      .status(httpStatusCode.INTERNAL_SERVER_ERROR)
+      .json({ message: "히스토리 조회에 실패했습니다." });
+  }
+};
